@@ -25,7 +25,8 @@ class Lists:
 def get_title(data):
     return data['name']
 
-def get_all_lists(data, all_cards):
+def get_all_lists(data):
+    all_cards = get_all_cards(data)
     out = []
     for each_list in data['lists']:
         list_card = []
@@ -36,20 +37,6 @@ def get_all_lists(data, all_cards):
                list_card.append(each_card) 
         this_list = Lists(list_name, list_card)
         out.append(this_list)
-    return out
-
-def get_all_cards(data, all_texts):
-    out = []
-    for each_card in data['cards']:
-        list_id = each_card['idList']
-        desc = each_card['desc']
-        card_name = each_card['name']
-        card_text = []
-        for each_text in all_texts:
-            if each_text.card_name == card_name:
-                card_text.append(each_text)
-        this_card = Card(card_name, desc, card_text, list_id)
-        out.append(this_card)
     return out
 
 def get_all_texts(data):
@@ -64,6 +51,21 @@ def get_all_texts(data):
             out.append(this_text)
     return out
 
+def get_all_cards(data):
+    all_texts = get_all_texts(data)
+    out = []
+    for each_card in data['cards']:
+        list_id = each_card['idList']
+        desc = each_card['desc']
+        card_name = each_card['name']
+        card_text = []
+        for each_text in all_texts:
+            if each_text.card_name == card_name:
+                card_text.append(each_text)
+        this_card = Card(card_name, desc, card_text, list_id)
+        out.append(this_card)
+    return out
+
 
 def trello2md():
     jsonfile = sys.argv[1]
@@ -71,9 +73,7 @@ def trello2md():
     with open(jsonfile, 'r') as f:
         data = json.load(f)
         title = get_title(data)
-        all_text = get_all_texts(data)
-        all_cards = get_all_cards(data, all_text)
-        all_lists = get_all_lists(data, all_cards)
+        all_lists = get_all_lists(data)
 
     with open(outfile, 'w') as f:
         for each_list in all_lists:
