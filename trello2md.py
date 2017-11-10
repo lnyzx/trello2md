@@ -77,13 +77,15 @@ def trello2md():
 
     with open(outfile, 'w') as f:
         for each_list in all_lists:
-            f.write("# " + each_list.list_name + '\r\n')
+            f.write("# " + each_list.list_name + '\r\n'+ '\r\n')
             for each_card in each_list.card:
-                f.write("## " + each_card.card_name + '\r\n')
+                f.write("## " + each_card.card_name + '\r\n'+ '\r\n')
                 if each_card.desc != '':
-                    f.write("`" + each_card.desc + "`" + '\r\n')
+                    f.write(">" + each_card.desc + '\r\n'+ '\r\n')
                 for each_text in each_card.text:
-                    f.write(each_text.content + '\r\n')
+                    f.write("```" + '\r\n')
+                    f.write(each_text.content + '\r\n'+ '\r\n')
+                    f.write("```" + '\r\n')
 
 
 
