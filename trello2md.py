@@ -2,6 +2,8 @@
 
 import json
 import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 class Text:
     def __init__(self, card_name, content):
@@ -64,8 +66,8 @@ def get_all_texts(data):
 
 
 def trello2md():
-    jsonfile = 'exported.json'
-    outfile = 'output.md'
+    jsonfile = sys.argv[1]
+    outfile = sys.argv[2]
     with open(jsonfile, 'r') as f:
         data = json.load(f)
         title = get_title(data)
@@ -73,19 +75,20 @@ def trello2md():
         all_cards = get_all_cards(data, all_text)
         all_lists = get_all_lists(data, all_cards)
 
-    for each_list in all_lists:
-        print "## " + each_list.list_name
-        for each_card in each_list.card:
-            print "### " + each_card.card_name
-
-    # with open(outfile, 'w') as f:
-    #     pass
+    with open(outfile, 'w') as f:
+        for each_list in all_lists:
+            f.write("# " + each_list.list_name + '\r\n')
+            for each_card in each_list.card:
+                f.write("## " + each_card.card_name + '\r\n')
+                if each_card.desc != '':
+                    f.write("`" + each_card.desc + "`" + '\r\n')
+                for each_text in each_card.text:
+                    f.write(each_text.content + '\r\n')
 
 
 
 if __name__ == "__main__":
-    # if len(sys.argv) < 3:
-    #     print "Usage: python trello2md.py [exported json file] [output markdown file]"
-    # else:
-    #     trello2md()
-    trello2md()
+    if len(sys.argv) < 3:
+        print "Usage: python trello2md.py [exported json file] [output markdown file]"
+    else:
+        trello2md()
