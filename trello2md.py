@@ -94,4 +94,4 @@ if __name__ == "__main__":
         print "Usage: python trello2md.py [exported json file] [output markdown file]"
     else:
         trello2md()
-        print "convert done"
+        print "convert done out markdown file saved in " + sys.argv[2]
